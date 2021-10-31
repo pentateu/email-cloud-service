@@ -1,0 +1,57 @@
+
+{
+    "log_file" : "./_test/testlog",
+    "log_level" : "debug",
+    "pid_file" : "./pidfile.pid",
+    "allowed_hosts": [
+      "guerrillamail.com",
+      "guerrillamailblock.com",
+      "sharklasers.com",
+      "guerrillamail.net",
+      "guerrillamail.org",
+      "grr.la"
+    ],
+
+    "backend_config": {
+        "save_process": "HeadersParser|Debugger|Hasher|Header|MailDir",
+        "validate_process": "MailDir",
+		"maildir_user_map" : "test=-1:-1",
+		"maildir_path" : "_test/Maildir",
+		"save_workers_size" : 1,
+		"primary_mail_host":"sharklasers.com",
+		"log_received_mails" : false
+    },
+    "servers" : [
+        {
+            "is_enabled" : true,
+            "host_name":"mail.test.com",
+            "max_size": 1000000,
+			"tls" : {
+				"private_key_file":"_test/mail2.guerrillamail.com.key.pem",
+            	"public_key_file":"_test/mail2.guerrillamail.com.cert.pem",
+				"start_tls_on":true,
+            	"tls_always_on":false
+			},
+            "timeout":180,
+            "listen_interface":"127.0.0.1:3535",
+            "max_clients": 1000,
+            "log_file" : "./_test/testlog"
+        },
+        {
+            "is_enabled" : false,
+            "host_name":"enable.test.com",
+            "max_size": 1000000,
+            
+			"tls" : {
+				"private_key_file":"_test/mail2.guerrillamail.com.key.pem",
+            	"public_key_file":"_test/mail2.guerrillamail.com.cert.pem",
+				"start_tls_on":true,
+            	"tls_always_on":false
+			},
+            "timeout":180,
+            "listen_interface":"127.0.0.1:2228",
+            "max_clients": 1000,
+            "log_file" : "./_test/testlog"
+        }
+    ]
+}

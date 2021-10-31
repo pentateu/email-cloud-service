@@ -1,38 +1,19 @@
-/*
-
-                 _..--+~/@-~--.
-             _-=~      (  .   "}
-          _-~     _.--=.\ \""""
-        _~      _-       \ \_\
-       =      _=          '--'
-      '      =                             .
-     :      :       ____                   '=_. ___
-___  |      ;                            ____ '~--.~.
-     ;      ;                               _____  } |
-  ___=       \ ___ __     __..-...__           ___/__/__
-     :        =_     _.-~~          ~~--.__
-_____ \         ~-+-~                   ___~=_______
-     ~@#~~ == ...______ __ ___ _--~~--_
-                                                    .=
-Art by Peter Weighill
-
-*/
-
 package main
 
 import (
 	"errors"
-	"github.com/flashmob/fastcgi-processor"
-	"github.com/flashmob/go-guerrilla"
-	"github.com/flashmob/go-guerrilla/log"
-	"github.com/flashmob/maildir-processor"
-	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"os/signal"
 	"strconv"
 	"strings"
 	"syscall"
+
+	"github.com/flashmob/go-guerrilla"
+	"github.com/flashmob/go-guerrilla/log"
+
+	//maildir_processor "github.com/flashmob/maildir-processor"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -106,9 +87,9 @@ func serve(cmd *cobra.Command, args []string) {
 	d = guerrilla.Daemon{Logger: mainlog}
 
 	// add the Processor to be identified as "MailDir"
-	d.AddProcessor("MailDir", maildir_processor.Processor)
+	d.AddProcessor("MailDir", Processor) //maildir_processor.Processor)
 	// add the FastCGI processor
-	d.AddProcessor("FastCGI", fcgi_processor.Processor)
+	//	d.AddProcessor("FastCGI", fcgi_processor.Processor)
 
 	err := readConfig(configPath, pidFile)
 	if err != nil {

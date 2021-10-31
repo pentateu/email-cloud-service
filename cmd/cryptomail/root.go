@@ -1,13 +1,3 @@
-/*             _
-              / _)
-     _.----._/ /
-    /         /
- __/ (  | (  |
-/__.-'|_|--|_|
-
-(art credits unknown)
-
-*/
 package main
 
 import (

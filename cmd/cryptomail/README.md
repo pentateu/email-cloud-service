@@ -3,8 +3,6 @@ responsible to receive email messages and store temporarily until retrieved by n
 
 Messages are enrypted.
 
-## Initially Based on: github.com/flashmob/maildiranasaurus
-
 
 # Mail Libraries
 https://github.com/flashmob
