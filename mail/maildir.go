@@ -1,4 +1,4 @@
-package main
+package mail
 
 import (
 	"fmt"
@@ -11,8 +11,9 @@ import (
 	"github.com/flashmob/go-guerrilla/backends"
 	"github.com/flashmob/go-guerrilla/mail"
 	"github.com/flashmob/go-guerrilla/response"
-	"github.com/flashmob/go-maildir"
-	_ "github.com/sloonz/go-maildir"
+	iface "github.com/ipfs/interface-go-ipfs-core"
+	"github.com/pentateu/email-cloud-service/config"
+	maildir "github.com/pentateu/go-crypto-maildir"
 )
 
 const MailDirFilePerms = 0600
@@ -124,73 +125,76 @@ func usermap(usermap string) (ret map[string][]int) {
 	return
 }
 
-var Processor = func() backends.Decorator {
+//IPFSProcessor - Create a Processor that stores encrypted mail using maildir format in IPFS
+func IPFSProcessor(mailConfig *config.MailConfig, ipfs iface.CoreAPI) func() backends.Decorator {
+	return func() backends.Decorator {
 
-	// The following initialization is run when the program first starts
+		// The following initialization is run when the program first starts
 
-	// config will be populated by the initFunc
-	var (
-		m *MailDir
-	)
-	// initFunc is an initializer function which is called when our processor gets created.
-	// It gets called for every worker
-	initializer := backends.InitializeWith(func(backendConfig backends.BackendConfig) error {
-		configType := backends.BaseConfig(&maildirConfig{})
-		bcfg, err := backends.Svc.ExtractConfig(backendConfig, configType)
+		// config will be populated by the initFunc
+		var (
+			m *MailDir
+		)
+		// initFunc is an initializer function which is called when our processor gets created.
+		// It gets called for every worker
+		initializer := backends.InitializeWith(func(backendConfig backends.BackendConfig) error {
+			configType := backends.BaseConfig(&maildirConfig{})
+			bcfg, err := backends.Svc.ExtractConfig(backendConfig, configType)
 
-		if err != nil {
-			return err
-		}
-		c := bcfg.(*maildirConfig)
-		m, err = newMailDir(c)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	// register our initializer
-	backends.Svc.AddInitializer(initializer)
-
-	return func(c backends.Processor) backends.Processor {
-		// The function will be called on each email transaction.
-		// On success, it forwards to the next step in the processor call-stack,
-		// or returns with an error if failed
-		return backends.ProcessWith(func(e *mail.Envelope, task backends.SelectTask) (backends.Result, error) {
-			if task == backends.TaskValidateRcpt {
-				// Check the recipients for each RCPT command.
-				// This is called each time a recipient is added,
-				// validate only the _last_ recipient that was appended
-				if size := len(e.RcptTo); size > 0 {
-					if err := m.validateRcpt(&e.RcptTo[size-1]); err != nil {
-						backends.Log().WithError(backends.NoSuchUser).Info("recipient not configured: ", e.RcptTo[size-1].User)
-						return backends.NewResult(
-								response.Canned.FailRcptCmd),
-							backends.NoSuchUser
-					}
-
-				}
-				return c.Process(e, task)
-			} else if task == backends.TaskSaveMail {
-				for i := range e.RcptTo {
-					u := strings.ToLower(e.RcptTo[i].User)
-					mdir, ok := m.dirs[u]
-					if !ok {
-						// no such user
-						continue
-					}
-					if filename, err := mdir.CreateMail(e.NewReader()); err != nil {
-						backends.Log().WithError(err).Error("Could not save email")
-						return backends.NewResult(fmt.Sprintf("554 Error: could not save email for [%s]", u)), err
-					} else {
-						backends.Log().Debug("saved email as", filename)
-					}
-				}
-				// continue to the next Processor in the decorator chain
-				return c.Process(e, task)
-			} else {
-				return c.Process(e, task)
+			if err != nil {
+				return err
 			}
-
+			c := bcfg.(*maildirConfig)
+			m, err = newMailDir(c)
+			if err != nil {
+				return err
+			}
+			return nil
 		})
+		// register our initializer
+		backends.Svc.AddInitializer(initializer)
+
+		return func(c backends.Processor) backends.Processor {
+			// The function will be called on each email transaction.
+			// On success, it forwards to the next step in the processor call-stack,
+			// or returns with an error if failed
+			return backends.ProcessWith(func(e *mail.Envelope, task backends.SelectTask) (backends.Result, error) {
+				if task == backends.TaskValidateRcpt {
+					// Check the recipients for each RCPT command.
+					// This is called each time a recipient is added,
+					// validate only the _last_ recipient that was appended
+					if size := len(e.RcptTo); size > 0 {
+						if err := m.validateRcpt(&e.RcptTo[size-1]); err != nil {
+							backends.Log().WithError(backends.NoSuchUser).Info("recipient not configured: ", e.RcptTo[size-1].User)
+							return backends.NewResult(
+									response.Canned.FailRcptCmd),
+								backends.NoSuchUser
+						}
+
+					}
+					return c.Process(e, task)
+				} else if task == backends.TaskSaveMail {
+					for i := range e.RcptTo {
+						u := strings.ToLower(e.RcptTo[i].User)
+						mdir, ok := m.dirs[u]
+						if !ok {
+							// no such user
+							continue
+						}
+						if filename, err := mdir.CreateMail(e.NewReader()); err != nil {
+							backends.Log().WithError(err).Error("Could not save email")
+							return backends.NewResult(fmt.Sprintf("554 Error: could not save email for [%s]", u)), err
+						} else {
+							backends.Log().Debug("saved email as", filename)
+						}
+					}
+					// continue to the next Processor in the decorator chain
+					return c.Process(e, task)
+				} else {
+					return c.Process(e, task)
+				}
+
+			})
+		}
 	}
 }

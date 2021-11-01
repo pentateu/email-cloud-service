@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/spf13/cobra"
+	"fmt"
 
-	guerrilla "github.com/flashmob/go-guerrilla"
+	"github.com/spf13/cobra"
 )
 
 var versionCmd = &cobra.Command{
@@ -11,16 +11,10 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version info",
 	Long:  `Every software has a version. This is Guerrilla's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		logVersion()
+		fmt.Println("I dont know which version I am :( sorry :( ")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
-}
-
-func logVersion() {
-	mainlog.Infof("maildiranasaurus %s", guerrilla.Version)
-	mainlog.Debugf("Build Time: %s", guerrilla.BuildTime)
-	mainlog.Debugf("Commit:     %s", guerrilla.Commit)
 }

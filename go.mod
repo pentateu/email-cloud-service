@@ -19,6 +19,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/pentateu/go-crypto-maildir v0.0.0-20211031084008-0e0875bc7fdd // indirect
 	github.com/prometheus/client_golang v0.9.3 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/sloonz/go-maildir v0.0.0-20210417175458-ec35083290ab // indirect

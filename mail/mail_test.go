@@ -1,4 +1,4 @@
-package main
+package mail
 
 import (
 	"bufio"
@@ -394,7 +394,7 @@ func init() {
 }
 
 // start server, change config, send SIG HUP, confirm that the pidfile changed & backend reloaded
-func TestServe(t *testing.T) {
+func TestStart(t *testing.T) {
 	//if err := os.MkdirAll("./_test/", 0755); err != nil {
 	//	wd, _ := os.Getwd()
 	//	t.Fatal("could not create test dir:", err, " wd:", wd)
@@ -409,7 +409,7 @@ func TestServe(t *testing.T) {
 	var serveWG sync.WaitGroup
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -482,7 +482,7 @@ func TestServerAddEvent(t *testing.T) {
 	var serveWG sync.WaitGroup
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration) // allow the server to start
@@ -549,7 +549,7 @@ func TestServerStartEvent(t *testing.T) {
 	var serveWG sync.WaitGroup
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -619,7 +619,7 @@ func TestServerStopEvent(t *testing.T) {
 	var serveWG sync.WaitGroup
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -711,7 +711,7 @@ func TestAllowedHostsEvent(t *testing.T) {
 	time.Sleep(testPauseDuration)
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -812,7 +812,7 @@ func TestTLSConfigEvent(t *testing.T) {
 	var serveWG sync.WaitGroup
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -918,7 +918,7 @@ func TestBadTLSStart(t *testing.T) {
 
 		serveWG.Add(1)
 		go func() {
-			serve(cmd, []string{})
+			Start(cmd, []string{})
 			serveWG.Done()
 		}()
 		time.Sleep(testPauseDuration)
@@ -957,7 +957,7 @@ func TestBadTLSReload(t *testing.T) {
 
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -1034,7 +1034,7 @@ func TestSetTimeoutEvent(t *testing.T) {
 
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
@@ -1113,7 +1113,7 @@ func TestDebugLevelChange(t *testing.T) {
 
 	serveWG.Add(1)
 	go func() {
-		serve(cmd, []string{})
+		Start(cmd, []string{})
 		serveWG.Done()
 	}()
 	time.Sleep(testPauseDuration)
