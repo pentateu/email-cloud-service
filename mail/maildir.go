@@ -80,8 +80,10 @@ func (m *MailDir) validateRcpt(addr *mail.Address) backends.RcptError {
 	return nil
 }
 
-func newMailDir(config *maildirConfig) (*MailDir, error) {
+//newMailDir -
+func newMailDir(config *maildirConfig, ipfs iface.CoreAPI) (*MailDir, error) {
 	m := &MailDir{}
+	m.ipfs = ipfs
 	m.config = config
 	m.userMap = usermap(m.config.UserMap)
 	if strings.Index(m.config.Path, "~/") == 0 {
@@ -128,10 +130,9 @@ func usermap(usermap string) (ret map[string][]int) {
 //IPFSProcessor - Create a Processor that stores encrypted mail using maildir format in IPFS
 func IPFSProcessor(mailConfig *config.MailConfig, ipfs iface.CoreAPI) func() backends.Decorator {
 	return func() backends.Decorator {
-
 		// The following initialization is run when the program first starts
 
-		// config will be populated by the initFunc
+		// config will be populated by the initializer function
 		var (
 			m *MailDir
 		)
@@ -145,7 +146,7 @@ func IPFSProcessor(mailConfig *config.MailConfig, ipfs iface.CoreAPI) func() bac
 				return err
 			}
 			c := bcfg.(*maildirConfig)
-			m, err = newMailDir(c)
+			m, err = newMailDir(c, ipfs)
 			if err != nil {
 				return err
 			}

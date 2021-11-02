@@ -15,17 +15,17 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ipfsNode, err := ipfs.Start(cmd, args)
 		if err != nil {
-			//log fatal error :( - ipfs could not start
+			//TODO: log fatal error :( - ipfs could not start
 			return
 		}
 
 		mailConfig, err := config.Load(cmd, args, ipfsNode)
 		if err != nil {
-			//log fatal error :( - config could not load
+			//TODO: log fatal error :( - config could not load
 			return
 		}
 
-		mail.Start(cmd, args, mailConfig)
+		mail.Start(cmd, args, mailConfig, ipfsNode)
 	},
 }
 

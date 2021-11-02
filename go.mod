@@ -14,16 +14,22 @@ require (
 	github.com/flashmob/go-guerrilla v1.6.1 // indirect
 	github.com/flashmob/go-maildir v0.0.0-20170303050255-96c8878d94ea // indirect
 	github.com/flashmob/maildir-processor v0.0.0-20170318133922-235aad79032f // indirect
-	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
+	github.com/gxed/hashland/keccakpg v0.0.1 // indirect
+	github.com/gxed/hashland/murmur3 v0.0.1 // indirect
+	github.com/ipfs/go-ipfs-files v0.0.9 // indirect
+	github.com/ipfs/interface-go-ipfs-core v0.5.2 // indirect
 	github.com/jonboulle/clockwork v0.1.0 // indirect
+	github.com/libp2p/go-libp2p-core v0.11.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/multiformats/go-multiaddr v0.4.1 // indirect
 	github.com/pentateu/go-crypto-maildir v0.0.0-20211031084008-0e0875bc7fdd // indirect
 	github.com/prometheus/client_golang v0.9.3 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/sloonz/go-maildir v0.0.0-20210417175458-ec35083290ab // indirect
 	github.com/soheilhy/cmux v0.1.4 // indirect
+	github.com/spacemonkeygo/openssl v0.0.0-20181017203307-c2dcc5cca94a // indirect
 	github.com/spf13/cobra v1.2.1 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
 	github.com/tomasen/fcgi_client v0.0.0-20180423082037-2bb3d819fd19 // indirect
