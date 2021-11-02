@@ -1,5 +1,5 @@
-# smtp cloud service
-THis component is responsible to receive email messages, encrypt and store on IPFS until is retrieved by nodes or until expiration time.
+# email cloud service
+This component is responsible to receive email messages, encrypt and store on IPFS until is retrieved by nodes or until expiration time.
 
 ## Features:
 ### Receiving emails:
